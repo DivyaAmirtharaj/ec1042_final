@@ -2,12 +2,14 @@ import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 
-def get_url():
-    pass
-
+def get_url(start, end):
+    urls = []
+    for i in range(start, end+1):
+        url = f'https://www.basketball-reference.com/leagues/NBA_{i}_per_game.html'
+        urls.append(url)
+    return urls
 
 def get_basketball_reference(player):
-
     """Fetching data"""
     url = 'https://www.basketball-reference.com/leagues/NBA_2019_per_game.html'
     r = requests.get(url)
@@ -21,26 +23,17 @@ def get_basketball_reference(player):
     head=soup.find(class_="thead")
     column_names_raw=[head.text for item in head][0]
     column_names_polished=column_names_raw.replace("\n",",").split(",")[2:-1]
-    
-    
+
     """Extracting full list of player_data"""
     players=[]
-    
     for i in range(len(table)):
-        
         player_=[]
-        
         for td in table[i].find_all("td"):
             player_.append(td.text)
-    
         players.append(player_)
         
-        
-    """Creating Player Dictionary"""  
-        
+    """Creating Player Dictionary"""     
     player_dict={}
-    
-    
     Player=[x[0] for x in players]
     Pos=[x[1] for x in players]
     Age=[int(x[2]) for x in players]
@@ -101,22 +94,19 @@ def get_basketball_reference(player):
                 "PPG":PPG}
     
     """Converting dictionary to dataframe and displaying it"""
-    
     df=pd.DataFrame(player_dict).set_index("Player")
     
     """Selecting columns with shooting percentages,
     and converting them to float numbers, removing the "." at the beginning """
-    #x=df.select(lambda col: "%" in col, axis=1).columns
     x = df.filter(like='%').columns
-    
     for item in x:
         df[item]= pd.to_numeric(df[item].str.split(".", n = 1, expand = True)[1])/10
     print(df)
     
     #GETTING PLAYER DATA
-    df.to_csv('output.csv', index=True)
+    df.loc[player].to_csv(f'{player}.csv', index=True)
     return df.loc[player]
 
-name=input("For which basketball player would you like to get updated stats?: ")
-
-print(get_basketball_reference(name))
+#name=input("For which basketball player would you like to get updated stats?: ")
+#print(get_basketball_reference(name))
+get_url(2008, 2010)
