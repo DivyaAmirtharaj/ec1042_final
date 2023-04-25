@@ -120,8 +120,8 @@ def run(player, start, end):
 
 #run("Rashad McCants", 2005, 2009)
 #run("Lamar Odom", 1999, 2013)
-run("Kris Humphries", 2004, 2017)
-run("James Harden", 2009, 2023)
+#run("Kris Humphries", 2004, 2017)
+#un("James Harden", 2009, 2023)
 run("Tristan Thompson", 2011, 2023)
 run("Blake Griffin", 2009, 2023)
 run("Ben Simmons", 2016, 2023)
