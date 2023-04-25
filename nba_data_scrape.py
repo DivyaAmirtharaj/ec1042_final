@@ -26,9 +26,9 @@ def get_basketball_reference(player, urls, start):
         column_names_raw=[head.text for item in head][0]
         column_names_polished=column_names_raw.replace("\n",",").split(",")[2:-1]
 
+        players=[]
         try:
             """Extracting full list of player_data"""
-            players=[]
             for i in range(len(table)):
                 for td in table[i].find_all("td"):
                     if td.text == player:
@@ -103,7 +103,6 @@ def get_basketball_reference(player, urls, start):
         if player_dict:
             full_history[start] = player_dict
         start += 1
-    #print(full_history)
     return full_history
 
 def convert_to_panda(full_history, name):
@@ -119,8 +118,8 @@ def run(player, start, end):
     data = get_basketball_reference(player, urls, start)
     convert_to_panda(data, player)
 
-run("Rashad McCants", 2005, 2009)
-run("Lamar Odom", 1999, 2013)
+#run("Rashad McCants", 2005, 2009)
+#run("Lamar Odom", 1999, 2013)
 run("Kris Humphries", 2004, 2017)
 run("James Harden", 2009, 2023)
 run("Tristan Thompson", 2011, 2023)
