@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
+import numpy as np
 
 def get_url(start, end):
     urls = []
@@ -9,8 +10,8 @@ def get_url(start, end):
         urls.append(url)
     return urls
 
-def get_basketball_reference(player, urls):
-    dfs = []
+def get_basketball_reference(player, urls, start):
+    full_history = {}
     for url in urls:
         """Fetching data"""
         r = requests.get(url)
@@ -28,42 +29,42 @@ def get_basketball_reference(player, urls):
         """Extracting full list of player_data"""
         players=[]
         for i in range(len(table)):
-            player_=[]
             for td in table[i].find_all("td"):
-                player_.append(td.text)
-            players.append(player_)
+                if td.text == player:
+                    for td in table[i].find_all("td"):
+                        players.append(td.text)
             
         """Creating Player Dictionary"""     
         player_dict={}
-        Player=[x[0] for x in players]
-        Pos=[x[1] for x in players]
-        Age=[int(x[2]) for x in players]
-        Tm=[x[3] for x in players]
-        G=[int(x[4]) for x in players] 
-        GS=[int(x[5]) for x in players] 
-        MP=[float(x[6]) for x in players]
-        FG=[float(x[7]) for x in players]
-        FGA=[float(x[8]) for x in players]
-        FG_perc=[x[9] for x in players]
-        Three_point=[float(x[10]) for x in players]
-        Three_point_A=[float(x[11]) for x in players]
-        Three_point_perc=[x[12] for x in players]
-        Two_point=[float(x[13]) for x in players] 
-        Two_point_A=[float(x[14]) for x in players] 
-        Two_point_perc=[x[15] for x in players]
-        eFG_perc=[x[16] for x in players]
-        FT=[float(x[17]) for x in players]
-        FTA=[float(x[18]) for x in players]
-        FT_perc=[x[19] for x in players]
-        ORB=[float(x[20]) for x in players]
-        DRB=[float(x[21]) for x in players]
-        TRB=[float(x[22]) for x in players] 
-        AST=[float(x[23]) for x in players] 
-        STL=[float(x[24]) for x in players]
-        BLK=[float(x[25]) for x in players]
-        TOV=[float(x[26]) for x in players]
-        PF=[float(x[27]) for x in players]
-        PPG=[float(x[28]) for x in players]
+        Player=[players[0]]
+        Pos=[players[1]]
+        Age=[players[2]]
+        Tm=[players[3]]
+        G=[int(players[4])] 
+        GS=[int(players[5])] 
+        MP=[float(players[6])]
+        FG=[float(players[7])]
+        FGA=[float(players[8])]
+        FG_perc=[players[9]]
+        Three_point=[float(players[10])]
+        Three_point_A=[float(players[11])]
+        Three_point_perc=[players[12]]
+        Two_point=[float(players[13])] 
+        Two_point_A=[float(players[14])] 
+        Two_point_perc=[players[15]]
+        eFG_perc=[players[16]]
+        FT=[float(players[17])]
+        FTA=[float(players[18])]
+        FT_perc=[players[19]]
+        ORB=[float(players[20])]
+        DRB=[float(players[21])]
+        TRB=[float(players[22])] 
+        AST=[float(players[23])] 
+        STL=[float(players[24])]
+        BLK=[float(players[25])]
+        TOV=[float(players[26])]
+        PF=[float(players[27])]
+        PPG=[float(players[28])]
         
         player_dict={
                     "Player":Player,
@@ -94,26 +95,24 @@ def get_basketball_reference(player, urls):
                     "TOV":TOV,
                     "PF":PF,
                     "PPG":PPG}
-        
-        """Converting dictionary to dataframe and displaying it"""
-        df=pd.DataFrame(player_dict).set_index("Player")
-        
-        """Selecting columns with shooting percentages,
-        and converting them to float numbers, removing the "." at the beginning """
-        x = df.filter(like='%').columns
-        for item in x:
-            df[item]= pd.to_numeric(df[item].str.split(".", n = 1, expand = True)[1])/10        
-        
-        #GETTING PLAYER DATA
-        dfs.append(df.loc[player])
-    print(dfs)
-    result = pd.concat(dfs)
-    result.to_csv(f'{player}.csv', index=True)
-    return True
+        #print(player_dict)
+        full_history[start] = player_dict
+        start += 1
+    print(full_history)
+    return full_history
 
-name = input("For which basketball player would you like to get updated stats?: ")
-start_year = input("Starting in what year? ")
-end_year = input("Ending in what year? ")
-urls = get_url(int(start_year), int(end_year))
+def convert_to_panda(full_history):
+    df = pd.DataFrame.from_dict(full_history, orient='index')
+    df = df.reset_index().rename(columns={'index': 'Year'})
+    df = df[['Year', 'Player', 'Pos', 'Age', 'Tm', 'G', 'MP', 'FG', 'FGA', 'FG%', '3P', '3PA', '3P%', '2P', '2PA', '2P%', 'eFG%', 'FT', 'FTA', 'FT%', 'ORB', 'DRB', 'TRB', 'AST', 'STL', 'BLK', 'TOV', 'PF', 'PPG']]
+    print(df)
+    df.to_csv('example.csv', index=False)
 
-print(get_basketball_reference(name, urls))
+
+#name = input("For which basketball player would you like to get updated stats?: ")
+#start_year = input("Starting in what year? ")
+#end_year = input("Ending in what year? ")
+urls = get_url(int(2019), int(2022))
+
+data = get_basketball_reference("Stephen Curry", urls, 2019)
+convert_to_panda(data)
