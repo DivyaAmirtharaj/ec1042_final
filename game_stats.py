@@ -85,4 +85,14 @@ def reg_season():
     run_reg("Ben Simmons", 2018, 2023)
     run_reg("Devin Booker", 2015, 2023) 
 
-get_playoff_games("Devin Booker", 'https://www.basketball-reference.com/players/b/bookede01/gamelog-playoffs/')
+def playoff():
+    get_playoff_games("Devin Booker", 'https://www.basketball-reference.com/players/b/bookede01/gamelog-playoffs/')
+    get_playoff_games("Ben Simmons", 'https://www.basketball-reference.com/players/s/simmobe01/gamelog-playoffs/')
+    get_playoff_games("Blake Griffin", 'https://www.basketball-reference.com/players/g/griffbl01/gamelog-playoffs/')
+    get_playoff_games("Tristan Thompson", 'https://www.basketball-reference.com/players/t/thomptr01/gamelog-playoffs/')
+    get_playoff_games("James Harden", 'https://www.basketball-reference.com/players/h/hardeja01/gamelog-playoffs/')
+    get_playoff_games("Kris Humphries", 'https://www.basketball-reference.com/players/h/humphkr01/gamelog-playoffs/')
+    get_playoff_games("Lamar Odom", 'https://www.basketball-reference.com/players/o/odomla01/gamelog-playoffs/')
+
+#reg_season()
+#playoff()
