@@ -59,7 +59,7 @@ def run(player, start, end):
 #run("James Harden", 2009, 2023)
 #run("Tristan Thompson", 2011, 2023)
 
-run("Blake Griffin", 2011, 2023)
+#run("Blake Griffin", 2011, 2023)
 
 #run("Ben Simmons", 2018, 2023)
 #run("Devin Booker", 2015, 2023) 
