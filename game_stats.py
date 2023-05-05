@@ -5,7 +5,7 @@ import pandas as pd
 def get_urls(start, end):
     urls = []
     for i in range(start, end+1):
-        url = f'https://www.basketball-reference.com/players/b/bookede01/gamelog/{i}'
+        url = f'https://www.basketball-reference.com/players/m/mccanra01/gamelog/{i}'
         urls.append(url)
     return urls
 
@@ -53,13 +53,11 @@ def run(player, start, end):
     urls = get_urls(start, end)
     get_season_games(urls, player)
 
-#run("Rashad McCants", 2005, 2009)
-#run("Lamar Odom", 1999, 2013)
-#run("Kris Humphries", 2004, 2017)
-#run("James Harden", 2009, 2023)
-#run("Tristan Thompson", 2011, 2023)
-
+#run("Rashad McCants", 2006, 2009)
+#run("Lamar Odom", 2000, 2013)
+#run("Kris Humphries", 2005, 2017)
+#run("James Harden", 2010, 2023)
+#run("Tristan Thompson", 2012, 2023)
 #run("Blake Griffin", 2011, 2023)
-
 #run("Ben Simmons", 2018, 2023)
 #run("Devin Booker", 2015, 2023) 
