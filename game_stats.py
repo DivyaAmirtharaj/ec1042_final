@@ -46,18 +46,43 @@ def get_season_games(urls, player):
         else:
             total_df = pd.concat([total_df, df])
 
-    total_df.to_csv(f"indiv_game_stats/{player}.csv", index=True)
+    total_df.to_csv(f"playoff_game_stats/{player}.csv", index=True)
 
+def get_playoff_games(player, url):
+    response = requests.get(url)
+    soup = BeautifulSoup(response.content, 'html.parser')
 
-def run(player, start, end):
+    table = soup.find('table', {'id': 'pgl_basic_playoffs'}) # find the table with id 'pgl_basic_playoffs'
+
+    headers = []
+    for th in table.find('thead').findAll('th'):
+        if th.text.strip() == "Rk":
+                pass
+        else:
+            headers.append(th.text.strip()) # get the table headers
+    data = []
+    for row in table.find('tbody').findAll('tr'): # iterate through each row in the table
+        player_data = []
+        for td in row.findAll('td'): # iterate through each cell in the row
+            player_data.append(td.text.strip()) # get the data for the player
+        data.append(player_data)
+
+    df = pd.DataFrame(data, columns=headers) # create a pandas dataframe with the scraped data
+    print(df) # print the first few rows of the dataframe
+    df.to_csv(f"playoff_game_stats/{player}.csv", index=True)
+
+def run_reg(player, start, end):
     urls = get_urls(start, end)
     get_season_games(urls, player)
 
-#run("Rashad McCants", 2006, 2009)
-#run("Lamar Odom", 2000, 2013)
-#run("Kris Humphries", 2005, 2017)
-#run("James Harden", 2010, 2023)
-#run("Tristan Thompson", 2012, 2023)
-#run("Blake Griffin", 2011, 2023)
-#run("Ben Simmons", 2018, 2023)
-#run("Devin Booker", 2015, 2023) 
+def reg_season():
+    run_reg("Rashad McCants", 2006, 2009)
+    run_reg("Lamar Odom", 2000, 2013)
+    run_reg("Kris Humphries", 2005, 2017)
+    run_reg("James Harden", 2010, 2023)
+    run_reg("Tristan Thompson", 2012, 2023)
+    run_reg("Blake Griffin", 2011, 2023)
+    run_reg("Ben Simmons", 2018, 2023)
+    run_reg("Devin Booker", 2015, 2023) 
+
+get_playoff_games("Devin Booker", 'https://www.basketball-reference.com/players/b/bookede01/gamelog-playoffs/')
