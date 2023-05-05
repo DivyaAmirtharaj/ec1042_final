@@ -105,6 +105,7 @@ def get_basketball_reference(player, urls, start):
         start += 1
     return full_history
 
+
 def convert_to_panda(full_history, name):
     df = pd.DataFrame.from_dict(full_history, orient='index')
     df = df.reset_index().rename(columns={'index': 'Year'})
@@ -117,6 +118,7 @@ def run(player, start, end):
     urls = get_url(start, end)
     data = get_basketball_reference(player, urls, start)
     convert_to_panda(data, player)
+
 
 #run("Rashad McCants", 2005, 2009) -> finished
 #run("Lamar Odom", 1999, 2013) -> finished
